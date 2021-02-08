@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Smart Reminder</string>
+    <string name="login">Login</string>
+    <string name="smart_reminder">Smart Reminder</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="new_user">New User</string>
+    <string name="reminder1">Haircut</string>
+    <string name="reminder2">Meeting</string>
+    <string name="add_a_new_reminder">Add a new reminder</string>
+</resources>
