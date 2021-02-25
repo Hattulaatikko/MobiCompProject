@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginTop="16dp"
     android:layout_marginEnd="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,8 @@
             android:id="@+id/reminder_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:text="@string/message"
+            android:textSize="26sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,8 +35,9 @@
             android:id="@+id/reminder_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
+            android:text="@string/_30_05_1997"
             android:importantForAccessibility="no"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/icon_date"
@@ -55,8 +57,9 @@
             android:id="@+id/reminder_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
+            android:text="@string/_18_30"
             android:importantForAccessibility="no"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/icon_time"
@@ -76,13 +79,33 @@
             android:id="@+id/reminder_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
+            android:text="@string/home"
             android:importantForAccessibility="no"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/icon_location"
             app:layout_constraintTop_toBottomOf="@id/reminder_time" />
+
+        <ImageView
+            android:id="@+id/reminder_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit" />
+
+
+        <TextView
+            android:id="@+id/reminder_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reminder_location"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

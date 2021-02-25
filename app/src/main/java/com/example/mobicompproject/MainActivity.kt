@@ -8,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mobicompproject.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,22 +19,22 @@ class MainActivity : AppCompatActivity() {
         binding.buttonLogin.setOnClickListener { logUserIn() }
     }
 
-    fun saveUser() {
+    private fun saveUser() {
         val username = binding.editTextUsername.text.toString()
         val password = binding.editTextPassword.text.toString()
-        Log.d("Username: ", username.toString())
+        Log.d("Username: ", username)
         val sharedPreferences = getSharedPreferences("com.mobicompproject", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putString(username.toString(), password.toString())
+        editor.putString(username, password)
         editor.apply()
     }
-    fun logUserIn() {
+    private fun logUserIn() {
         val username: String = binding.editTextUsername.text.toString()
         val password: String = binding.editTextPassword.text.toString()
         val sharedPreferences = getSharedPreferences("com.mobicompproject", Context.MODE_PRIVATE)
-        if (password == sharedPreferences.getString(username.toString(), "")) {
+        if (password == sharedPreferences.getString(username, "")) {
             Log.d("login", "Correct password entered!")
-            startActivity(Intent(applicationContext, ReminderMenu::class.java))
+            startActivity(Intent(this, ListActivity::class.java))
         } else {
             Log.d("login", "Incorrect password.")
         }

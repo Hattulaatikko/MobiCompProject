@@ -8,4 +8,14 @@
     <string name="reminder1">Haircut</string>
     <string name="reminder2">Meeting</string>
     <string name="add_a_new_reminder">Add a new reminder</string>
+    <string name="set_date">Set date</string>
+    <string name="reminder_message">Reminder Message</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="update_reminder">Update reminder</string>
+    <string name="set_time">Set time</string>
+    <string name="message">Message</string>
+    <string name="_30_05_1997">30.05.1997</string>
+    <string name="_18_30">18:30</string>
+    <string name="home">Home</string>
+    <string name="delete">Delete</string>
 </resources>
