@@ -10,10 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobicompproject.R
 import com.example.mobicompproject.database.ReminderViewModel
-import com.example.mobicompproject.databinding.FragmentListBinding
+import com.example.mobicompproject.databinding.FragmentListAllBinding
 
-class ListFragment : Fragment() {
-    private var _binding: FragmentListBinding? = null
+class ListAllFragment : Fragment() {
+    private var _binding: FragmentListAllBinding? = null
     private val binding get() = _binding!!
     private lateinit var reminderViewModel: ReminderViewModel
 
@@ -22,23 +22,23 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentListBinding.inflate(inflater, container, false)
+        _binding = FragmentListAllBinding.inflate(inflater, container, false)
 
         //UserViewModel
         reminderViewModel = ViewModelProvider(this).get(ReminderViewModel::class.java)
 
         //RecyclerView
         val adapter = ReminderItemAdapter(this.reminderViewModel)
-        val recyclerView = binding.recyclerview
+        val recyclerView = binding.recyclerviewListall
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        reminderViewModel.readPast.observe(viewLifecycleOwner, { reminder ->
+        reminderViewModel.readAll.observe(viewLifecycleOwner, { reminder ->
             adapter.setData(reminder)
         })
 
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
+        binding.floatingActionButtonListall.setOnClickListener {
+            findNavController().navigate(R.id.action_listAllFragment_to_addFragment)
         }
 
 

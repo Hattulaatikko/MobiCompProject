@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobicompproject.R
 import com.example.mobicompproject.database.Reminder
 import com.example.mobicompproject.database.ReminderViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class ReminderItemAdapter(private val reminderViewModel: ReminderViewModel) : RecyclerView.Adapter<ReminderItemAdapter.ReminderViewHolder>() {
 
@@ -42,8 +43,8 @@ class ReminderItemAdapter(private val reminderViewModel: ReminderViewModel) : Re
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
 
         val reminder = reminderList[position]
-        val stringDateTime = reminder.reminder_time
-        val dateTime = LocalDateTime.parse(stringDateTime, DateTimeFormatter.ISO_DATE_TIME)
+        val reminderTime = reminder.reminder_time
+        val dateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(reminderTime), ZoneId.systemDefault())
 
 
         val date = "${dateTime.dayOfMonth}.${dateTime.monthValue}.${dateTime.year}"

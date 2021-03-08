@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         val username: String = binding.editTextUsername.text.toString()
         val password: String = binding.editTextPassword.text.toString()
         val sharedPreferences = getSharedPreferences("com.mobicompproject", Context.MODE_PRIVATE)
-        if (password == sharedPreferences.getString(username, "")) {
+        if (password == sharedPreferences.getString(username, "wrong")) {
             Log.d("login", "Correct password entered!")
             startActivity(Intent(this, ListActivity::class.java))
         } else {

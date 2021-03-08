@@ -16,7 +16,8 @@ import com.example.mobicompproject.database.Reminder
 import com.example.mobicompproject.database.ReminderViewModel
 import com.example.mobicompproject.databinding.FragmentUpdateBinding
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 class UpdateFragment : Fragment() {
 
@@ -41,8 +42,8 @@ class UpdateFragment : Fragment() {
         // Display current reminder details
         binding.updateEtMessage.setText(args.currentReminder.message)
 
-        val stringDateTime = args.currentReminder.reminder_time
-        val dateTime = LocalDateTime.parse(stringDateTime, DateTimeFormatter.ISO_DATE_TIME)
+        val reminderTime = args.currentReminder.reminder_time
+        val dateTime = LocalDateTime.ofEpochSecond(reminderTime,0, ZoneOffset.UTC)
 
 
         val date = "${dateTime.dayOfMonth}.${dateTime.monthValue}.${dateTime.year}"
@@ -80,10 +81,11 @@ class UpdateFragment : Fragment() {
         val savedTime =   binding.updateTime.text.toString().split(":")
         val hour = savedTime[0].toInt()
         val minute = savedTime[1].toInt()
-        val unformattedTime = LocalDateTime.of(year, month, day, hour, minute)
-        val reminderTime = unformattedTime.format(DateTimeFormatter.ISO_DATE_TIME)
+        val localDateTime = LocalDateTime.of(year, month, day, hour, minute)
+        val zonedDateTime = localDateTime.atZone(ZoneId.systemDefault())
+        val reminderTime = zonedDateTime.toEpochSecond()
         val updatedReminder =
-            Reminder(args.currentReminder.id, message, reminderTime, System.currentTimeMillis(), null, null, 0, false)
+            Reminder(args.currentReminder.id, message, reminderTime, System.currentTimeMillis()/1000, null, null, 0, false)
         reminderViewModel.updateReminder(updatedReminder)
         // Make a toast
         Toast.makeText(requireContext(), "Reminder updated!", Toast.LENGTH_LONG).show()
@@ -92,23 +94,8 @@ class UpdateFragment : Fragment() {
 
     }
 
-    private var day = 0
-    private var month = 0
-    private var year = 0
-    private var hour = 0
-    private var minute = 0
-
-    private fun getDateTimeCalendar() {
-        val date: LocalDateTime = LocalDateTime.now()
-        day = date.dayOfMonth
-        month = date.monthValue
-        year = date.year
-        hour = date.hour
-        minute = date.minute
-    }
-
     private fun getDate():String {
-        getDateTimeCalendar()
+        val date: LocalDateTime = LocalDateTime.now()
         var savedDate = ""
         val dpd = DatePickerDialog(requireContext(), { _, savedYear, savedMonth, savedDay ->
 
@@ -116,7 +103,7 @@ class UpdateFragment : Fragment() {
             savedDate = "${savedDay}.${savedMonth+1}.${savedYear}"
             binding.updateDate.text = savedDate
 
-        }, year, month-1, day)
+        }, date.year, date.monthValue-1, date.dayOfMonth)
 
         dpd.show()
 
@@ -124,7 +111,7 @@ class UpdateFragment : Fragment() {
     }
 
     private fun getTime():String {
-        getDateTimeCalendar()
+        val date: LocalDateTime = LocalDateTime.now()
         var savedTime = ""
         val dpd = TimePickerDialog(requireContext(),
             { _, savedHour, savedMinute ->
@@ -132,7 +119,7 @@ class UpdateFragment : Fragment() {
             savedTime = "${savedHour}:${savedMinute}"
             binding.updateTime.text = savedTime
 
-        }, hour, minute, true)
+        }, date.hour, date.minute, true)
 
         dpd.show()
         return savedTime

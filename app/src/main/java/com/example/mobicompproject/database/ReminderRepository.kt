@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 class ReminderRepository(private val reminderDao: ReminderDao) {
 
     val readAll: LiveData<List<Reminder>> = reminderDao.readAll()
+    val readPast: LiveData<List<Reminder>> = reminderDao.readPast()
+
 
     suspend fun addReminder(reminder: Reminder){
         reminderDao.addReminder(reminder)
@@ -17,4 +19,5 @@ class ReminderRepository(private val reminderDao: ReminderDao) {
     suspend fun deleteReminder(reminder: Reminder) {
         reminderDao.deleteReminder(reminder)
     }
+
 }

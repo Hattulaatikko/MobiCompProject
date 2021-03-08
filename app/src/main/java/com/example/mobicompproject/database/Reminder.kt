@@ -12,7 +12,7 @@ data class Reminder (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val message: String,
-    val reminder_time: String,
+    val reminder_time: Long,
     val creation_time: Long,
     val location_x: Double? = null,
     val location_y: Double? = null,

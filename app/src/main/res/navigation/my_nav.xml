@@ -43,4 +43,16 @@
         android:name="com.example.mobicompproject.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/listAllFragment"
+        android:name="com.example.mobicompproject.fragments.list.ListAllFragment"
+        android:label="fragment_list_all"
+        tools:layout="@layout/fragment_list_all" >
+        <action
+            android:id="@+id/action_listAllFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+        <action
+            android:id="@+id/action_listAllFragment_to_updateFragment"
+            app:destination="@id/updateFragment" />
+    </fragment>
 </navigation>

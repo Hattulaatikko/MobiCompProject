@@ -1,8 +1,13 @@
 package com.example.mobicompproject.fragments.add
 
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.TimePickerDialog
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +20,7 @@ import com.example.mobicompproject.database.Reminder
 import com.example.mobicompproject.database.ReminderViewModel
 import com.example.mobicompproject.databinding.FragmentAddBinding
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
 
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
@@ -32,6 +37,8 @@ class AddFragment : Fragment() {
 
         reminderViewModel = ViewModelProvider(this).get(ReminderViewModel::class.java)
 
+        createChannel(getString(R.string.reminder_notification_channel_id), getString(R.string.reminder_notification_channel_name))
+
         binding.newDate.setOnClickListener {
             getDate()
         }
@@ -43,6 +50,8 @@ class AddFragment : Fragment() {
             insertDataToDatabase()
         }
 
+
+
         return binding.root
     }
 
@@ -50,40 +59,25 @@ class AddFragment : Fragment() {
     private fun insertDataToDatabase() {
         val message = binding.newEtMessage.text.toString()
         val date = binding.newDate.text.toString()
-        val savedDate:List<String> = date.split(".")
-        val day = savedDate[0].toInt()
-        val month = savedDate[1].toInt()
-        val year = savedDate[2].toInt()
-        val savedTime =   binding.newTime.text.toString().split(":")
-        val hour = savedTime[0].toInt()
-        val minute = savedTime[1].toInt()
-        val unformattedTime = LocalDateTime.of(year, month, day, hour, minute)
-        val reminderTime = unformattedTime.format(DateTimeFormatter.ISO_DATE_TIME)
+        val time = binding.newTime.text.toString()
+        val reminderTime = reminderViewModel.dateTimeStringToEpochSeconds(date, time)
+        //Log.d("AddFragment", "reminderTime in seconds: $reminderTime")
         val reminder =
-            Reminder(0, message, reminderTime, System.currentTimeMillis(), null, null, 0, false)
+            Reminder(0, message, reminderTime, System.currentTimeMillis()/1000, null, null, 0, false)
         reminderViewModel.addReminder(reminder)
+        if(binding.newCbNotification.isChecked) {
+            if (reminderViewModel._alarmOn.value!!) {
+                Log.d("AddFragment", "reminderTime in seconds: $reminderTime")
+                reminderViewModel.createAlarm(reminderTime * 1000)
+            }
+        }
         Toast.makeText(requireContext(), "Reminder added!", Toast.LENGTH_LONG).show()
         findNavController().navigate(R.id.action_addFragment_to_listFragment)
 
     }
 
-    private var day = 0
-    private var month = 0
-    private var year = 0
-    private var hour = 0
-    private var minute = 0
-
-    private fun getDateTimeCalendar() {
-        val date: LocalDateTime = LocalDateTime.now()
-        day = date.dayOfMonth
-        month = date.monthValue
-        year = date.year
-        hour = date.hour
-        minute = date.minute
-    }
-
     private fun getDate():String {
-        getDateTimeCalendar()
+        val date: LocalDateTime = LocalDateTime.now()
         var savedDate = ""
         val dpd = DatePickerDialog(requireContext(), { _, savedYear, savedMonth, savedDay ->
 
@@ -91,7 +85,7 @@ class AddFragment : Fragment() {
             savedDate = "${savedDay}.${savedMonth+1}.${savedYear}"
             binding.newDate.text = savedDate
 
-        }, year, month-1, day)
+        }, date.year, date.monthValue-1, date.dayOfMonth)
 
         dpd.show()
 
@@ -99,19 +93,38 @@ class AddFragment : Fragment() {
     }
 
     private fun getTime():String {
-        getDateTimeCalendar()
+        val date: LocalDateTime = LocalDateTime.now()
         var savedTime = ""
         val dpd = TimePickerDialog(requireContext(), { _, savedHour, savedMinute ->
             // Display Selected time
             savedTime = "${savedHour}:${savedMinute}"
             binding.newTime.text = savedTime
 
-        }, hour, minute, true)
+        }, date.hour, date.minute, true)
 
         dpd.show()
         return savedTime
     }
 
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.BLUE
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Reminder"
+
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
