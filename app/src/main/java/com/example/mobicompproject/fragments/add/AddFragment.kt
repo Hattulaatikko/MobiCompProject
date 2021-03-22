@@ -22,6 +22,8 @@ import com.example.mobicompproject.databinding.FragmentAddBinding
 import java.time.LocalDateTime
 
 
+private val TAG = "AddFragment"
+
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +47,10 @@ class AddFragment : Fragment() {
         binding.newTime.setOnClickListener {
             getTime()
         }
+        binding.newLocation.setOnClickListener {
+            getLocation()
+            Log.d(TAG, "getLocationListener")
+        }
 
         binding.buttonAddReminder.setOnClickListener {
             insertDataToDatabase()
@@ -58,13 +64,21 @@ class AddFragment : Fragment() {
 
     private fun insertDataToDatabase() {
         val message = binding.newEtMessage.text.toString()
-        val date = binding.newDate.text.toString()
-        val time = binding.newTime.text.toString()
+        val date = reminderViewModel.savedDate
+        val time = reminderViewModel.savedTime
         val reminderTime = reminderViewModel.dateTimeStringToEpochSeconds(date, time)
+        Log.d(TAG, reminderViewModel.latitude.toString())
+        if(reminderViewModel.latitude == 0.0 || reminderViewModel.longitude == 0.0){
+            val reminder =
+                Reminder(0, message, reminderTime, System.currentTimeMillis()/1000, null, null, 0, false)
+            reminderViewModel.addReminder(reminder)
+        } else {
+            val reminder =
+                Reminder(0, message, reminderTime, System.currentTimeMillis()/1000, reminderViewModel.latitude, reminderViewModel.longitude, 0, false)
+            reminderViewModel.addReminder(reminder)
+        }
         //Log.d("AddFragment", "reminderTime in seconds: $reminderTime")
-        val reminder =
-            Reminder(0, message, reminderTime, System.currentTimeMillis()/1000, null, null, 0, false)
-        reminderViewModel.addReminder(reminder)
+
         if(binding.newCbNotification.isChecked) {
             if (reminderViewModel._alarmOn.value!!) {
                 Log.d("AddFragment", "reminderTime in seconds: $reminderTime")
@@ -72,6 +86,8 @@ class AddFragment : Fragment() {
             }
         }
         Toast.makeText(requireContext(), "Reminder added!", Toast.LENGTH_LONG).show()
+        reminderViewModel.savedDate = ""
+        reminderViewModel.savedTime = ""
         findNavController().navigate(R.id.action_addFragment_to_listFragment)
 
     }
@@ -83,12 +99,11 @@ class AddFragment : Fragment() {
 
             // Display Selected date
             savedDate = "${savedDay}.${savedMonth+1}.${savedYear}"
+            reminderViewModel.savedDate = savedDate
             binding.newDate.text = savedDate
 
         }, date.year, date.monthValue-1, date.dayOfMonth)
-
         dpd.show()
-
         return savedDate
     }
 
@@ -98,10 +113,9 @@ class AddFragment : Fragment() {
         val dpd = TimePickerDialog(requireContext(), { _, savedHour, savedMinute ->
             // Display Selected time
             savedTime = "${savedHour}:${savedMinute}"
+            reminderViewModel.savedTime = savedTime
             binding.newTime.text = savedTime
-
         }, date.hour, date.minute, true)
-
         dpd.show()
         return savedTime
     }
@@ -124,6 +138,12 @@ class AddFragment : Fragment() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
+    }
+
+    //I can't get the location values back from the dialog
+    private fun getLocation() {
+        findNavController().navigate(R.id.action_addFragment_to_mapsFragment)
+        Log.d(TAG, "getLocationFunction")
     }
 
     override fun onDestroyView() {

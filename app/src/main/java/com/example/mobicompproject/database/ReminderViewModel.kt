@@ -24,6 +24,10 @@ class ReminderViewModel(application: Application): AndroidViewModel(application)
 
     val readAll: LiveData<List<Reminder>>
     val readPast: LiveData<List<Reminder>>
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var savedDate: String = ""
+    var savedTime: String = ""
 
     private val repository: ReminderRepository
 
@@ -97,7 +101,6 @@ class ReminderViewModel(application: Application): AndroidViewModel(application)
         val zonedDateTime = localDateTime.atZone(ZoneId.systemDefault())
         return zonedDateTime.toEpochSecond()
     }
-
 
 
 }

@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_addFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_addFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/updateFragment"
@@ -55,4 +58,12 @@
             android:id="@+id/action_listAllFragment_to_updateFragment"
             app:destination="@id/updateFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/mapsFragment"
+        android:name="com.example.mobicompproject.fragments.map.MapsFragment"
+        android:label="MapsFragment" >
+        <action
+            android:id="@+id/action_mapsFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </dialog>
 </navigation>
